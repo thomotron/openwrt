@@ -13,6 +13,13 @@ To flash, connect to the serial port at 115200:
 
 cu -l /dev/cu.usbserial -s 115200
 
+or if you have trouble with cu:
+
+screen /dev/cu.usbserial 115200
+
+Bit in either case, change /dev/cu.usbserial to the correct device name for
+your USB to serial adapter.
+
 Reboot the node in some way, so that you see the uboot prompt:
 
 
