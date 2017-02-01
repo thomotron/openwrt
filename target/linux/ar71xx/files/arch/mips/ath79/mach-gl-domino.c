@@ -12,12 +12,16 @@
 */
 
 #include <linux/gpio.h>
+#include <linux/mmc/host.h>
+#include <linux/spi/spi.h>
+#include <linux/spi/mmc_spi.h>
 
 #include <asm/mach-ath79/ath79.h>
 
 #include "dev-eth.h"
 #include "dev-gpio-buttons.h"
 #include "dev-leds-gpio.h"
+#include "dev-spi.h"
 #include "dev-m25p80.h"
 #include "dev-usb.h"
 #include "dev-wmac.h"
@@ -44,6 +48,27 @@
 #define	DOMINO_MAC1_OFFSET	0x0000
 #define DOMINO_CALDATA_OFFSET	0x1000
 #define DOMINO_WMAC_MAC_OFFSET	0x0000
+
+static struct mmc_spi_platform_data ath79_mmc_data = {
+       .detect_delay = 100, /* msecs */
+        .ocr_mask       = MMC_VDD_32_33 | MMC_VDD_33_34,
+};
+
+static struct ath79_spi_controller_data ath79_spi1_cdata = {
+        .cs_type = ATH79_SPI_CS_TYPE_GPIO,
+        .cs_line = TL_MR3X20_GPIO_CS1_MMC,
+};
+
+static struct spi_board_info ath79_spi_info[] = {
+        {
+                .bus_num        = 0,
+                .chip_select    = 1,
+                .max_speed_hz   = 25000000,
+                .modalias       = "mmc_spi",
+                .platform_data  = &ath79_mmc_data,
+                .controller_data = &ath79_spi1_cdata,
+        }
+};
 
 static struct gpio_led domino_leds_gpio[] __initdata = {
 	{
@@ -108,6 +133,10 @@ static void __init domino_setup(void)
 
 	/* register flash. */
 	ath79_register_m25p80(NULL);
+
+	/* And SPI-connected microSD/MMC */
+	spi_register_board_info(ath79_spi_info,
+				ARRAY_SIZE(ath79_spi_info));
 
 	/* register gpio LEDs and keys */
 	ath79_register_leds_gpio(-1, ARRAY_SIZE(domino_leds_gpio),

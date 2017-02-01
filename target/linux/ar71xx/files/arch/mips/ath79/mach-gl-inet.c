@@ -12,12 +12,16 @@
  */
 
 #include <linux/gpio.h>
+#include <linux/mmc/host.h>
+#include <linux/spi/spi.h>
+#include <linux/spi/mmc_spi.h>
 
 #include <asm/mach-ath79/ath79.h>
 
 #include "dev-eth.h"
 #include "dev-gpio-buttons.h"
 #include "dev-leds-gpio.h"
+#include "dev-spi.h"
 #include "dev-m25p80.h"
 #include "dev-usb.h"
 #include "dev-wmac.h"
@@ -26,6 +30,12 @@
 #define GL_INET_GPIO_LED_WLAN		0
 #define GL_INET_GPIO_LED_LAN		13
 #define GL_INET_GPIO_BTN_RESET		11
+
+// PGS 20170201 - Fictional CS line for 2nd SPI device
+// (used for microSD card). In reality, we are simply
+// inverting CS0 and feeding that to the microSD slot,
+// however, I don't know how to specify that here.
+#define TL_MR3X20_GPIO_CS1_MMC 0
 
 #define GL_INET_KEYS_POLL_INTERVAL	20	/* msecs */
 #define GL_INET_KEYS_DEBOUNCE_INTERVAL	(3 * GL_INET_KEYS_POLL_INTERVAL)
@@ -38,6 +48,29 @@ static const char * gl_inet_part_probes[] = {
 static struct flash_platform_data gl_inet_flash_data = {
 	.part_probes = gl_inet_part_probes,
 };
+
+
+static struct mmc_spi_platform_data ath79_mmc_data = {
+       .detect_delay = 100, /* msecs */ 
+	.ocr_mask	= MMC_VDD_32_33 | MMC_VDD_33_34,
+};
+
+static struct ath79_spi_controller_data ath79_spi1_cdata = {
+	.cs_type = ATH79_SPI_CS_TYPE_GPIO,
+	.cs_line = TL_MR3X20_GPIO_CS1_MMC,
+};
+
+static struct spi_board_info ath79_spi_info[] = {
+	{
+		.bus_num	= 0,
+		.chip_select	= 1,
+		.max_speed_hz	= 25000000,
+		.modalias	= "mmc_spi",
+		.platform_data	= &ath79_mmc_data,
+		.controller_data = &ath79_spi1_cdata,
+	}
+};
+
 
 static struct gpio_led gl_inet_leds_gpio[] __initdata = {
 	{
@@ -78,6 +111,10 @@ static void __init gl_inet_setup(void)
 
 	/* register flash. MTD will use tp-link parser to parser MTD */
 	ath79_register_m25p80(&gl_inet_flash_data);
+
+	/* And SPI-connected microSD/MMC */
+	spi_register_board_info(ath79_spi_info,
+				ARRAY_SIZE(ath79_spi_info));
 
 	/* register gpio LEDs and keys */
 	ath79_register_leds_gpio(-1, ARRAY_SIZE(gl_inet_leds_gpio),
