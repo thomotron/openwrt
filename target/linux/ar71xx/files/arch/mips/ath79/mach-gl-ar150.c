@@ -40,7 +40,7 @@
 // (used for microSD card). In reality, we are simply
 // inverting CS0 and feeding that to the microSD slot,
 // however, I don't know how to specify that here.
-#define TL_MR3X20_GPIO_CS1_MMC 0
+#define GL_AR150_GPIO_CS1_MMC 23
 
 #define GL_AR150_KEYS_POLL_INTERVAL   20	/* msecs */
 #define GL_AR150_KEYS_DEBOUNCE_INTERVAL	(3 * GL_AR150_KEYS_POLL_INTERVAL)
@@ -58,7 +58,7 @@ static struct mmc_spi_platform_data ath79_mmc_data = {
 
 static struct ath79_spi_controller_data ath79_spi1_cdata = {
 	.cs_type = ATH79_SPI_CS_TYPE_GPIO,
-	.cs_line = TL_MR3X20_GPIO_CS1_MMC,
+	.cs_line = GL_AR150_GPIO_CS1_MMC,
 };
 
 static struct spi_board_info ath79_spi_info[] = {
