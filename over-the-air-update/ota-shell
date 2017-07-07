@@ -1,0 +1,46 @@
+#!/bin/sh
+
+cd /serval
+rm -fr ota-update
+rmdir ota-update
+mkdir ota-update
+cd ota-update
+
+# Extract tar file from the end of this script.
+dd if=$0 of=files.tgz bs=8192 skip=1
+tar zxvf files.tgz
+
+XXX opkg install commands
+
+# Stop runlbard and runservald so that we can start it again with our new version.
+thepid=` ps | grep runservald | grep -v grep | cut -c1-6`
+kill $thepid
+thepid=` ps | grep runlbard | grep -v grep | cut -c1-6`
+kill $thepid
+lbardpid=` ps | grep lbard | grep -v grep | cut -c1-6`
+kill $lbardpid
+servald stop
+
+echo "GITCOMMITSTUFF"  > /serval-var/ota-version.txt
+
+# update radio firmware if required
+flash900 /serval/rfd900 /dev/ttyATH0 230400
+
+# Restart serval processes
+/etc/serval/runlbard &
+/etc/serval/runservald &
+
+# Now post to our MeshMB feed that we have updated
+XXX MESHMB
+
+# Now send a MeshMS to whoever cares about this mesh extender
+if [ -e /dos/monitor.sid ]; then
+  RECIPIENT=`cat /dos/monitor.sid`
+  COMMIT="GITCOMMITSTUFF"
+  /serval/servald meshms send message `/serval/servald keyring list | tail -1 | cut -f1 -d:` ${RECIPIENT} "Over-the-air-update installed on this mesh extender: git ${COMMIT}"
+fi
+
+# Exit explicitly, because we are following on with a tar ball
+exit 0
+
+# EOF

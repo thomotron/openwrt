@@ -1,0 +1,62 @@
+#!/bin/csh -f
+
+if ( ! -e ota-passphrase ) then
+  echo "You must create an ota-passphrase file that allows us to generate OTA bundles with a fixed BID"
+  exit 3
+endif
+
+set gitmessage=`git log | head -1 ; echo "[" ; git diff --shortstat ; echo " @ "; date ; echo "]" `
+set gitmessage=`echo $gitmessage | sed -e 's,/,,g'`
+echo $gitmessage
+
+set path=($path ~/g/serval-dna)
+
+cd instance
+setenv SERVALINSTANCE_PATH `pwd`
+cd ..
+
+servald stop
+rm servald-instance/rhizome.db
+servald start
+
+echo "My SID is "`servald id self | tail -1`
+
+# Now create OTA update file
+
+# Start by including the files to be updated (currently just
+# the main binaries, we can add more stuff later)
+if ( -e staging ) then
+  rm -fr staging
+endif
+mkdir staging
+cp helpdesk.sid monitor.sid staging/
+XXX openwrt mesh extender packages
+
+( cd staging/ ; tar zcvf - . ) > files.tgz
+if ( -e ota-complete ) then
+  rm ota-complete
+endif
+cat ota-shell | sed -e "s/GITCOMMITSTUFF/${gitmessage}/" > ota-shell-subst
+
+dd if=/dev/zero of=ota-complete bs=8192 count=1
+dd conv=notrunc seek=0 if=ota-shell-subst of=ota-complete bs=8192 count=1
+cat files.tgz >> ota-complete
+
+if ( -e me-ota-update.manifest ) then
+  rm me-ota-update.manifest
+endif
+
+servald rhizome list
+
+echo servald rhizome add file --force-new `servald id self |tail -1` ota-complete me-ota-update.manifest "#"`cat ota-passphrase`
+servald rhizome add file --force-new `servald id self |tail -1` ota-complete me-ota-update.manifest "#"`cat ota-passphrase`
+
+servald rhizome list
+servald stop
+
+set bundleid=`servald rhizome list | tail -1 | cut -f3 -d:`
+echo "BID = $bundleid"
+
+# Create bundleid file for OTA update
+echo $bundleid > ../image-files/etc/serval/ota-bundleid.txt
+
