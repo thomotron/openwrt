@@ -9,8 +9,9 @@ set gitmessage=`git log | head -1 ; echo "[" ; git diff --shortstat ; echo " @ "
 set gitmessage=`echo $gitmessage | sed -e 's,/,,g'`
 echo $gitmessage
 
-set path=($path ~/g/serval-dna)
+set path=($path `pwd`/serval-dna)
 
+mkdir -p instance
 cd instance
 setenv SERVALINSTANCE_PATH `pwd`
 cd ..
