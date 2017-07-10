@@ -55,12 +55,14 @@ mkdir staging
 cp helpdesk.sid monitor.sid staging/
 # openwrt mesh extender packages
 cp ../bin/ar71xx/packages/serval/*.ipk staging/
+set IPKFILES=`( cd ../bin/ar71xx/packages/serval ; echo *.ipk )`
+echo "Package files: $IPKFILES"
 
 ( cd staging/ ; tar zcvf - . ) > files.tgz
 if ( -e ota-complete ) then
   rm ota-complete
 endif
-cat ota-shell | sed -e "s/GITCOMMITSTUFF/${gitmessage}/" > ota-shell-subst
+cat ota-shell | sed -e "s/GITCOMMITSTUFF/${gitmessage}/" -e "s/IPKFILES/${IPKFILES}/" > ota-shell-subst
 
 dd if=/dev/zero of=ota-complete bs=8192 count=1
 dd conv=notrunc seek=0 if=ota-shell-subst of=ota-complete bs=8192 count=1
