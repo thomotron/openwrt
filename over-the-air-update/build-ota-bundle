@@ -6,8 +6,8 @@ if ( ! -e ota-passphrase ) then
 endif
 
 set gitmessage=`git log | head -1 ; echo "[" ; git diff --shortstat ; echo " @ "; date ; echo "]" `
-set gitmessage=`echo $gitmessage | sed -e 's,/,,g'`
-echo $gitmessage
+set gitmessage=`echo "$gitmessage" | sed -e 's,/,,g'`
+echo GIT message =  "$gitmessage"
 
 set path=($path `pwd`/serval-dna)
 

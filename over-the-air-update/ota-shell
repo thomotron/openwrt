@@ -11,7 +11,7 @@ dd if=$0 of=files.tgz bs=8192 skip=1
 tar zxvf files.tgz
 
 # opkg install commands
-opkg *.ipk
+opkg install *.ipk
 
 # Stop runlbard and runservald so that we can start it again with our new version.
 thepid=` ps | grep runservald | grep -v grep | cut -c1-6`
@@ -32,7 +32,10 @@ flash900 /serval/rfd900 /dev/ttyATH0 230400
 /etc/serval/runservald &
 
 # Now post to our MeshMB feed that we have updated
-XXX MESHMB
+id=`serval-dna/servald keyring list | tail -1 | cut -f2 -d:`
+version=`cat /serval-var/ota-version.txt`
+echo wget http://localhost:4110/restful/meshmb/${id}/sendmessage  --postdata="Applied over-the-mesh update version ${version}"
+wget http://localhost:4110/restful/meshmb/${id}/sendmessage  --postdata="Applied over-the-mesh update version ${version}"
 
 # Now send a MeshMS to whoever cares about this mesh extender
 if [ -e /dos/monitor.sid ]; then
