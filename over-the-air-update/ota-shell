@@ -10,7 +10,8 @@ cd ota-update
 dd if=$0 of=files.tgz bs=8192 skip=1
 tar zxvf files.tgz
 
-XXX opkg install commands
+# opkg install commands
+opkg *.ipk
 
 # Stop runlbard and runservald so that we can start it again with our new version.
 thepid=` ps | grep runservald | grep -v grep | cut -c1-6`

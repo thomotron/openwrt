@@ -53,7 +53,8 @@ if ( -e staging ) then
 endif
 mkdir staging
 cp helpdesk.sid monitor.sid staging/
-XXX openwrt mesh extender packages
+# openwrt mesh extender packages
+cp ../bin/ar71xx/packages/serval/*.ipk staging/
 
 ( cd staging/ ; tar zcvf - . ) > files.tgz
 if ( -e ota-complete ) then
