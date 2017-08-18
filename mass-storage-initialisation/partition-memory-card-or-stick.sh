@@ -59,3 +59,8 @@ fi
   # Write changes and exit
   echo w # Write and exit 
 ) | fdisk /dev/$device
+
+# Now create file systems
+mkfs.vfat /dev/${device}1
+mkfs.ext2 /dev/${device}2
+mkfs.ext2 /dev/${device}3
