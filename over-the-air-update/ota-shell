@@ -34,8 +34,7 @@ flash900 /serval/rfd900 /dev/ttyATH0 230400
 # Now post to our MeshMB feed that we have updated
 id=`serval-dna/servald keyring list | tail -1 | cut -f2 -d:`
 version=`cat /serval-var/ota-version.txt`
-echo wget http://localhost:4110/restful/meshmb/${id}/sendmessage  --postdata="Applied over-the-mesh update version ${version}"
-wget http://localhost:4110/restful/meshmb/${id}/sendmessage  --postdata="Applied over-the-mesh update version ${version}"
+lbard meshmb send "$id" "Applied over-the-mesh update version ${version}.\nGit commit GITCOMMITSTUFF.\n"
 
 # Now send a MeshMS to whoever cares about this mesh extender
 if [ -e /dos/monitor.sid ]; then
