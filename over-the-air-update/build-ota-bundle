@@ -1,7 +1,7 @@
 #!/bin/csh -f
 
 if ( ! -e ota-passphrase ) then
-  echo "You must create an ota-passphrase file that allows us to generate OTA bundles with a fixed BID"
+  echo "You must create a file called ota-passphrase that contains your secret passphrase for generate OTA bundles with a fixed BID"
   exit 3
 endif
 
@@ -29,17 +29,22 @@ endif
 touch $SERVALINSTANCE_PATH/serval.conf  # silence warnings about missing conf file
 servald start
 
-set keys=`servald id self | wc -l`
+set keys=`servald keyring list | wc -l`
 echo "-----------"
-servald id self
+servald keyring list
 echo "-----------"
 if ( $keys < 3 ) then
   echo "Creating keyring entry."
   servald keyring add
 endif
 
-set sid=`serval-dna/servald keyring list | tail -1 | cut -f1 -d:`
+set sid=`servald keyring list | tail -1 | cut -f1 -d:`
 echo "My SID is $sid"
+
+if ( "x$sid" == "x" ) then
+  echo "ERROR: Could not get SID for servald instance"
+  exit 3
+endif
 
 # Now create OTA update file
 
@@ -95,7 +100,7 @@ set bundleid=`servald rhizome list | tail -1 | cut -f3 -d:`
 echo "BID = $bundleid"
 
 # Create bundleid file for OTA update
-echo $bundleid > ota-bundleid.txt
+echo $bundleid > otabid.txt
 
 if ( "x$cleanuptmp" != "x" ) then
   find $SERVALINSTANCE_PATH -ls
