@@ -1,7 +1,13 @@
-#!/bin/csh -fx
+#!/bin/csh -f
+
+if ( "x$1" == "x" ) then
+  echo "usage: broadcast-start <network interface>"
+  exit 2
+endif
 
 ./broadcast-stop
 
+mkdir -p syncinst
 cd syncinst
 setenv SERVALINSTANCE_PATH `pwd`
 cd ..
@@ -10,6 +16,13 @@ servald stop
 rm syncinst/rhizome.db
 rm syncinst/serval.keyring
 servald start
+
+# Create simple serval.conf
+cat <<EOF >syncinst/serval.conf
+interfaces.1.match=$1
+interfaces.1.type=ethernet
+rhizome.fetch=false
+EOF
 
 servald rhizome import bundle me-ota-update me-ota-update.manifest
 
