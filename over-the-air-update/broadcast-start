@@ -1,0 +1,20 @@
+#!/bin/csh -fx
+
+./broadcast-stop
+
+cd syncinst
+setenv SERVALINSTANCE_PATH `pwd`
+cd ..
+
+servald stop
+rm syncinst/rhizome.db
+rm syncinst/serval.keyring
+servald start
+
+servald rhizome import bundle me-ota-update me-ota-update.manifest
+
+servald rhizome list
+
+sleep 5
+
+servald id peers

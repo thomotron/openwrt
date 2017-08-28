@@ -64,14 +64,14 @@ set IPKFILES=`( cd ../bin/ar71xx/packages/serval ; echo *.ipk )`
 echo "Package files: $IPKFILES"
 
 ( cd staging/ ; tar zcvf - . ) > files.tgz
-if ( -e ota-complete ) then
-  rm ota-complete
+if ( -e me-ota-update ) then
+  rm me-ota-update
 endif
 cat ota-shell | sed -e "s/GITCOMMITSTUFF/${gitmessage}/" -e "s/IPKFILES/${IPKFILES}/" > ota-shell-subst
 
-dd if=/dev/zero of=ota-complete bs=8192 count=1
-dd conv=notrunc seek=0 if=ota-shell-subst of=ota-complete bs=8192 count=1
-cat files.tgz >> ota-complete
+dd if=/dev/zero of=me-ota-update bs=8192 count=1
+dd conv=notrunc seek=0 if=ota-shell-subst of=me-ota-update bs=8192 count=1
+cat files.tgz >> me-ota-update
 
 if ( -e me-ota-update.manifest ) then
   rm me-ota-update.manifest
@@ -86,8 +86,8 @@ echo "-----------"
 echo "Insert new bundle"
 echo "-----------"
 set passphrase=`cat ota-passphrase`
-echo servald rhizome add file --force-new $sid ota-complete me-ota-update.manifest "#${passphrase}"
-servald rhizome add file --force-new $sid ota-complete me-ota-update.manifest "#${passphrase}"
+echo servald rhizome add file --force-new $sid me-ota-update me-ota-update.manifest "#${passphrase}"
+servald rhizome add file --force-new $sid me-ota-update me-ota-update.manifest "#${passphrase}"
 
 echo "-----------"
 echo "Verify that new bundle has been inserted"
