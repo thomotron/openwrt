@@ -32,7 +32,7 @@ flash900 /serval/rfd900 /dev/ttyATH0 230400
 /etc/serval/runservald &
 
 # Now post to our MeshMB feed that we have updated
-id=`serval-dna/servald keyring list | tail -1 | cut -f2 -d:`
+id=`servald keyring list | tail -1 | cut -f2 -d:`
 version=`cat /serval-var/ota-version.txt`
 lbard meshmb send "$id" "Applied over-the-mesh update version ${version}.\nGit commit GITCOMMITSTUFF.\n"
 
@@ -40,7 +40,7 @@ lbard meshmb send "$id" "Applied over-the-mesh update version ${version}.\nGit c
 if [ -e /dos/monitor.sid ]; then
   RECIPIENT=`cat /dos/monitor.sid`
   COMMIT="GITCOMMITSTUFF"
-  /serval/servald meshms send message `/serval/servald keyring list | tail -1 | cut -f1 -d:` ${RECIPIENT} "Over-the-air-update installed on this mesh extender: git ${COMMIT}"
+  servald meshms send message `servald keyring list | tail -1 | cut -f1 -d:` ${RECIPIENT} "Over-the-air-update installed on this mesh extender: git ${COMMIT}"
 fi
 
 # Exit explicitly, because we are following on with a tar ball
