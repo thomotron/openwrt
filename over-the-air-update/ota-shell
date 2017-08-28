@@ -31,6 +31,9 @@ flash900 /serval/rfd900 /dev/ttyATH0 230400
 /etc/serval/runlbard &
 /etc/serval/runservald &
 
+# Give servald some time to restart, so that we can poke it below
+sleep 10
+
 # Now post to our MeshMB feed that we have updated
 id=`servald keyring list | tail -1 | cut -f2 -d:`
 version=`cat /serval-var/ota-version.txt`
