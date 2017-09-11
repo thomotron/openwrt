@@ -1,0 +1,9 @@
+rm bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin
+# deleting packages and feed dirs below makes the packages get unticked in menuconfig
+#rm -fr package/feeds/serval feeds/serval
+scripts/feeds update serval
+scripts/feeds install -a serval
+scripts/feeds install -p serval
+make V=99 world
+cp bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin /srv/tftp/openwrt-domino.bin
+( cd ~/Projects/mesh-extender/openwrt-packages/auto-flash ; vlc alert.m3u )
