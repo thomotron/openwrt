@@ -90,8 +90,10 @@ define DownloadMethod/git
 		cd $(TMP_DIR)/dl && \
 		rm -rf $(SUBDIR) && \
 		[ \! -d $(SUBDIR) ] && \
-		git clone $(URL) $(SUBDIR) --recursive && \
-		(cd $(SUBDIR) && git checkout $(VERSION) && git submodule update) && \
+		echo -n ">>> Running download from in " && pwd && \
+		git clone $(URL) $(SUBDIR) && \
+		../../patch_gitrepos $(SUBDIR) && \
+		(cd $(SUBDIR) && git checkout $(VERSION) && git submodule init && git submodule update) && \
 		echo "Packing checkout..." && \
 		rm -rf $(SUBDIR)/.git && \
 		$(call dl_pack,$(TMP_DIR)/dl/$(FILE),$(SUBDIR)) && \

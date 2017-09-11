@@ -1,0 +1,22 @@
+echo "Entering patch_gitrepos $1"
+
+# Work out if we are running update-local mode, and if so,
+# patch http://github.com/ urls to git@localhost: URLs
+
+echo "working dir is "`pwd`
+cat ../../feeds.conf
+local=`grep localhost ../../feeds.conf | wc -l`
+echo "local = $local"
+
+if [ $local = 1 ]; then
+  cd $1/.git
+  cat .git/config | sed -e 's,https://github.com/,git@localhost:,g' > .git/newconfig
+  diff .git/newconfig .git/config
+  mv .git/newconfig .git/config
+  cd ..
+  
+  echo $1/.gitmodules  
+  cat .gitmodules | sed -e 's,https://github.com/,git@localhost:,g' > .gitnewmodules
+  diff .gitnewmodules .gitmodules
+  mv .gitnewmodules .gitmodules
+fi

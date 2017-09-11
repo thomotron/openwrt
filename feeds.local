@@ -1,4 +1,4 @@
-src-git serval /home/paul/Projects/mesh-extender/openwrt-packages;MeshExtender2.0
+src-git serval git@localhost:servalproject/openwrt-packages.git;MeshExtender2.0
 src-git packages https://github.com/openwrt/packages.git;for-15.05
 src-git luci https://github.com/openwrt/luci.git;for-15.05
 src-git routing https://github.com/openwrt-routing/packages.git;for-15.05
