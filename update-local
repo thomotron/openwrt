@@ -18,7 +18,8 @@ do
 done
 
 
-#make V=99 world
+/usr/bin/time -p make V=99 world
+
 cp bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin /srv/tftp/openwrt-domino.bin
 ( cd ~/Projects/mesh-extender/openwrt-packages/auto-flash ; vlc alert.m3u )
 
