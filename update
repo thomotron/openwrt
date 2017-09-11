@@ -1,6 +1,7 @@
 rm bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin
 # deleting packages and feed dirs below makes the packages get unticked in menuconfig
 #rm -fr package/feeds/serval feeds/serval
+cp feeds.remote feeds.conf
 scripts/feeds update serval
 scripts/feeds install -a serval
 scripts/feeds install -p serval
