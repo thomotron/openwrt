@@ -49,6 +49,15 @@ fi
   echo   # Accept default starting location
   echo +1G # 1GB in size
   
+  # Create ext file system in slice 2 for scratch space
+  echo n # Create new partition
+  echo p # It should be a primary partition
+  echo 4 # in slot 4
+  echo   # Accept default starting location
+  echo +1G # 1GB in size
+  echo t # set partition type
+  echo 82 # Linux swap
+  
   # Create big ext file system in slice 3 for /serval-var
   echo n # Create new partition
   echo p # It should be a primary partition
