@@ -56,6 +56,7 @@ fi
   echo   # Accept default starting location
   echo +1G # 1GB in size
   echo t # set partition type
+  echo 4 # of partition 4
   echo 82 # Linux swap
   
   # Create big ext file system in slice 3 for /serval-var
@@ -68,6 +69,9 @@ fi
   # Write changes and exit
   echo w # Write and exit 
 ) | fdisk /dev/$device
+
+# Time for kernel to resync with updated mbr
+sleep 3
 
 # Now create file systems
 mkfs.vfat /dev/${device}1
