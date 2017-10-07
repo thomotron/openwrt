@@ -25,7 +25,7 @@ servald stop
 echo "GITCOMMITSTUFF"  > /serval-var/ota-version.txt
 
 # update radio firmware if required
-flash900 /serval/rfd900 /dev/ttyATH0 230400
+flash900 /etc/serval/rfd900 /dev/ttyATH0 230400
 
 # Restart serval processes
 /etc/serval/runlbard &
