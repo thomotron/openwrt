@@ -10,6 +10,9 @@ cd ota-update
 dd if=$0 of=files.tgz bs=8192 skip=1
 tar zxvf files.tgz
 
+# Remove historical packages used in previous versions
+opkg remove nodogsplash
+
 # opkg install commands
 opkg install IPKFILES
 
