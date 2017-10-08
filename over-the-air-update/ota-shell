@@ -14,7 +14,9 @@ tar zxvf files.tgz
 opkg remove nodogsplash
 
 # opkg install commands
-opkg install IPKFILES
+# XXX - We ignore space checks, because they aren't correctly calculated for
+# JFFS2 root, where there is no /overlay, and thus files can actually be replaced
+opkg --force-space install IPKFILES
 
 # Stop runlbard and runservald so that we can start it again with our new version.
 thepid=` ps | grep runservald | grep -v grep | cut -c1-6`
