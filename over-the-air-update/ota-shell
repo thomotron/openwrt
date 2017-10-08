@@ -25,6 +25,8 @@ thepid=` ps | grep runlbard | grep -v grep | cut -c1-6`
 kill $thepid
 lbardpid=` ps | grep lbard | grep -v grep | cut -c1-6`
 kill $lbardpid
+sleep 2
+kill -9 $lbardpid
 servald stop
 
 echo "GITCOMMITSTUFF"  > /serval-var/ota-version.txt
@@ -35,6 +37,9 @@ flash900 /etc/serval/rfd900 /dev/ttyATH0 230400
 # Restart serval processes
 /etc/serval/runlbard &
 /etc/serval/runservald &
+
+# Update captive portal web content
+/etc/rc.d/S97captiveportal2 start
 
 # Give servald some time to restart, so that we can poke it below
 sleep 10
