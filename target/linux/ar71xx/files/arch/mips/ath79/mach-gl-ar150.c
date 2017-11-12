@@ -161,3 +161,4 @@ static void __init gl_ar150_setup(void)
 }
 
 MIPS_MACHINE(ATH79_MACH_GL_AR150, "GL-AR150", "GL AR150",gl_ar150_setup);
+MIPS_MACHINE(ATH79_MACH_GL_AR150, "domino", "GL Domino (AR150 compatible)",gl_ar150_setup);
