@@ -1,0 +1,6 @@
+nmcli c up servalproject.org
+./build-ota-bundle
+ssh-keygen -f "/home/paul/.ssh/known_hosts" -R 192.168.2.1
+scp me-ota-update root@192.168.2.1:/serval-var/
+ssh root@192.168.2.1 "( chmod 755 /serval-var/me-ota-update ; /serval-var/me-ota-update ; exit )"
+ssh root@192.168.2.1 
