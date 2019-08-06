@@ -1,10 +1,36 @@
-rm bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin
+#!/bin/sh
+
+# Clear out old images
+IMAGE_PATH="bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin"
+if [ -e "$IMAGE_PATH" ]; then
+	rm "$IMAGE_PATH"
+fi
+
 # deleting packages and feed dirs below makes the packages get unticked in menuconfig
 #rm -fr package/feeds/serval feeds/serval
+
+# Copy the package feeds over
 cp feeds.remote feeds.conf
+
+# Pull OpenWRT package feeds and build them
 scripts/feeds update serval
 scripts/feeds install -a serval
 scripts/feeds install -p serval
+
+# Build the firmware
 make V=99 world
-cp bin/ar71xx/openwrt-ar71xx-generic-gl-ar150-jffs2-64k-sysupgrade.bin /srv/tftp/openwrt-domino.bin
-( cd ~/Projects/mesh-extender/openwrt-packages/auto-flash ; vlc alert.m3u )
+
+# Check if there is a TFTP directory
+if [ -d "/srv/tftp/" ]; then
+	# Copy firmware into the TFTP directory as root
+	TFTP_CP="cp $IMAGE_PATH /srv/tftp/openwrt-domino.bin"
+	echo "Need sudo for the following command: $TFTP_CP"
+	sudo $TFTP_CP
+else
+	# Cannot auto-flash as there is no TFTP dir, so we'll stop here
+	exit 0
+fi
+
+# Play alert sound
+# Required files are missing from this repository
+#( cd auto-flash/ && vlc alert.m3u )
