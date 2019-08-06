@@ -4,7 +4,7 @@
 
 # Install updates
 sudo apt-get update
-sudo apt-get upgrade
+#sudo apt-get upgrade
 
 # Install dependencies
 sudo apt-get install -y \
