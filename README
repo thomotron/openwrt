@@ -1,3 +1,7 @@
+To install dependencies on Ubuntu 16.04/18.04:
+
+1. ./scripts/install-deps-ubuntu
+
 To build a Mesh Extender image:
 
 1. ./scripts/feeds update serval
