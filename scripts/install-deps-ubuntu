@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Install updates
+sudo apt-get update
+#sudo apt-get upgrade
+
+# Install dependencies
+sudo apt-get install -y \
+    csh \
+    g++ \
+    gawk \
+    gcc \
+    git \
+    libncurses-dev \
+    libssl1.0-dev \
+    libz-dev \
+    make \
+    python \
+    subversion \
+    unzip
