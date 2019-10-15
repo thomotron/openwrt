@@ -196,6 +196,11 @@ gl-ar300)
 	ucidef_set_led_wlan "wlan" "WLAN" "gl_ar300:wlan" "phy0tpt"
 	;;
 
+gl-ar750)
+	ucidef_set_led_wlan "wlan2g" "WLAN2G" "gl_ar750:white:wlan2g" "phy1tpt"
+	ucidef_set_led_wlan "wlan5g" "WLAN5G" "gl_ar750:white:wlan5g" "phy0tpt"
+	;;
+
 gl-domino)
 	ucidef_set_led_wlan "wlan" "WLAN" "domino:blue:wlan" "phy0tpt"
 	;;

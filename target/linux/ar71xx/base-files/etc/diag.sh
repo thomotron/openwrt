@@ -37,6 +37,9 @@ get_status_led() {
 	ap96)
 		status_led="ap96:green:led2"
 		;;
+	gl-ar750)
+		status_led="gl_ar750:white:power"
+		;;
 	aw-nr580)
 		status_led="aw-nr580:green:ready"
 		;;
@@ -389,6 +392,9 @@ set_state() {
 	done)
 		status_led_on
 		case $(ar71xx_board_name) in
+		gl-ar750)
+			fw_printenv lc >/dev/null 2>&1 && fw_setenv "bootcount" 0
+			;;
 		qihoo-c301)
 			local n=$(fw_printenv activeregion | cut -d = -f 2)
 			fw_setenv "image${n}trynum" 0
